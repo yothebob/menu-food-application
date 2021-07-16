@@ -1,0 +1,2 @@
+
+2021-07-15['lasauna', 'lasauna', 'lasauna', 'mac and cheese', 'spagetti', 'lasauna']2021-07-15['mac and cheese', 'spagetti', 'mac and cheese', 'terriki tofu', 'butternut squash', 'spagetti']2021-07-15['hamburgers\n', 'eggs in pergitory \n', 'hamburgers\n', 'eggs in pergitory \n', 'hamburgers\n', 'eggplant parm\n']

@@ -1,8 +1,16 @@
 # food program
 import random   
 from docx import Document
+from datetime import date
 
-dinners = ['terriki tofu', 'spagetti', 'mac and cheese', 'burritos', 'butternut squash', 'eggplant parmagan', 'lasauna']
+def import_dinners():
+    res = []
+    f = open("dinners.txt","r")
+    for line in f:
+        res.append(line)
+    return res
+
+dinners = import_dinners()
 
 days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 
@@ -18,8 +26,11 @@ def create_docx(menu):
     doc = Document()
     p = doc.add_paragraph()
     for day in range(6):
-        p.add_run(menu[day])
-    doc.save("menu.docx")
-    
+        p.add_run( days[day] + ": " + menu[day] + "\n")
+    doc.save(str(date.today()) + "menu.docx")
+    f = open("menus.txt","a")
+    f.write(str(date.today()) + str(menu))
+    f.close() 
     
 create_docx(create_menu())
+
