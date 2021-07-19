@@ -10,9 +10,19 @@ def import_dinner_dict():
     res = ast.literal_eval(contents)
     file.close()
     return res
-    
+
+def import_ingredient_profiles():
+    f = open('ingredients.txt','r')
+    contents = f.read()
+    res = ast.literal_eval(contents)
+    f.close()
+    return res
+
+
 dinners = import_dinner_dict()
 days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+ingredient_profiles = import_ingredient_profiles()
+
 
 def create_menu():
     menu = []
@@ -83,4 +93,31 @@ def read_saved_menus():
     return saved_menus
     
 
-create_docx()
+flavor_profile = ['sweet','sour','salt','bitter','acidic','basic','savory','hotness','spiciness','oily','minty'
+,'astringent','starchiness','horseradish','creamy','earthy']
+
+def meal_to_vec(meal):
+    res_profile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    profiles = []
+    for ingredient in dinners[meal]:
+        if ingredient in ingredient_profiles.keys():
+            print(ingredient,ingredient_profiles[ingredient])
+            profiles.append(ingredient_profiles[ingredient])
+        else:
+            new_ingredient_profile = []
+            print(ingredient)
+            for flavor in range(len(flavor_profile)):
+                profile = input(f"how {flavor_profile[flavor]} is this? (0-1)")
+                new_ingredient_profile.append(float(profile))
+            ingredient_profiles[ingredient] = new_ingredient_profile
+            f = open('ingredient.txt','w')
+            f.write(ingredient_profiles)
+            f.close()
+    for item in range(len(profiles)):
+        for flavor in range(len(res_profile)):
+            res_profile[flavor] += profiles[item][flavor]
+    for item in res_profile:
+        item = item/len(profiles)
+    print(res_profile)    
+            
+meal_to_vec("testing")        

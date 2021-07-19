@@ -1,0 +1,8 @@
+Things to add
+- add flavor profiler 
+- add user profiles so it can learn what users favorite flavor combos are 
+- a user has favorited meals and it can create a menu based off of those and not the entire data base
+- use flavor profiler to reccomend simular foods 
+- add ingredient database
+-add meal database
+- use web scraping tool
