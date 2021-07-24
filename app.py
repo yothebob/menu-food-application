@@ -1,9 +1,18 @@
 # food program
-import random   
+import random
 from docx import Document
 from datetime import date
 import ast
+import re
 
+"""
+    This is a food menu program designed to create cooking menus, you can store recipes, add ingredients and more!
+
+"""
+
+
+
+# 9-26 importing init app data from .txt files
 def import_dinner_dict():
     file = open("dinners_dict.txt", "r")
     contents = file.read()
@@ -24,27 +33,28 @@ days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 ingredient_profiles = import_ingredient_profiles()
 
 
+
 def create_menu():
+    #random gen mon-sunday meal plan
     menu = []
-    res = []
-    for key in dinners.keys():
-        menu.append(key)
     for num in range(6):
-        res.append(random.choice(menu))
-    return res
+        menu.append(random.choice(list(dinners.keys())))
+    return menu
 
 def add_meal():
+    #add meal to dinner.txt file
     new_meal = input("what would you like to add?")
     ingredients = input("what ingredients do you use?")
     ingredient_array = ingredients.split(",")
     print(ingredient_array)
     dinners[new_meal] = ingredient_array
     f = open("dinners_dict.txt", "w")
-    f.write(str(dinners)) 
+    f.write(str(dinners))
     f.close()
-    
+
 
 def create_docx():
+    #create word doc (.docx) menu, generate new menu or use a saved menu you have
     new_or_saved = input('would you like to use a saved menu? (y/n) \n: ')
     if "y" in new_or_saved.lower():
         menus = read_saved_menus()
@@ -65,38 +75,58 @@ def create_docx():
     doc.save(str(date.today()) + "menu.docx")
     f = open("menus.txt","a")
     f.write(str(date.today()) + str(menu))
-    f.close() 
-    
+    f.close()
+
 
 def generate_menu():
-    menu = create_menu()
+    #create a menu or generate a menu, if you like it, saves it for later
+    user_input = input("Do you want to create your own menu? (y/n)\n: ")
+    if "y" in user_input.lower():
+        menu = []
+        for day in days:
+            print(dinners.keys())
+            user_input = input(f"type the recipe you want for {day}\n:")
+            while user_input.lower() not in dinners.keys():
+                print(dinners.keys())
+                user_input = input(f"type the recipe you want for {day}\n:")
+            menu.append(user_input)
+    else:
+        menu = create_menu()
     [print(days[x]+ ': ' + menu[x]) for x in range(len(menu))]
     save = input('does this menu look good to you? (y/n) to save.')
     if save.lower() == "y":
         f = open('saved_menus.txt','a')
-        f.write(str(menu) +'|' + str(date.today()))
+        f.write(str(menu) +'|' + str(date.today()) + "\n")
         f.close()
-    
-    
+
+
 def read_saved_menus():
+    #read from saved_menus.txt, returns dict in format {date-index: menu}
     f = open('saved_menus.txt','r')
     saved_menus = {}
+    index = 0
     for line in f:
         menu=[]
-        seperate = line.split('|')
-        m = seperate[0][1:-1]
-        mm = m.split(',')
-        for item in mm:
-            menu.append(item.strip("' "))
-        date = seperate[1]
-        saved_menus[date] = menu
+        seperate = line.split("|")
+        if len(seperate) > 1:
+            if "\n" in seperate[1]:
+                date = seperate[1][:-2] + f"-{index}"
+            else:
+                date = seperate[1] + f"{index}"
+            index += 1
+            m = seperate[0][1:-1]
+            mm = m.split(',')
+            for item in mm:
+                menu.append(item.strip("' "))
+            saved_menus[date] = menu
     return saved_menus
-    
 
+#flavor profile for meal ingredients
 flavor_profile = ['sweet','sour','salt','bitter','acidic','basic','savory','hotness','spiciness','oily','minty'
 ,'astringent','starchiness','horseradish','creamy','earthy']
 
 def meal_to_vec(meal):
+    #converting ingredients to a total meal flavor profile
     res_profile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     profiles = []
     for ingredient in dinners[meal]:
@@ -118,6 +148,7 @@ def meal_to_vec(meal):
             res_profile[flavor] += profiles[item][flavor]
     for item in res_profile:
         item = item/len(profiles)
-    print(res_profile)    
-            
-meal_to_vec("testing")        
+    print(res_profile)
+
+#meal_to_vec("testing")
+#print(create_menu())
