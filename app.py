@@ -150,5 +150,12 @@ def meal_to_vec(meal):
         item = item/len(profiles)
     print(res_profile)
 
+def create_grocery_list(menu):
+    grocery_list = []
+    for meal in menu:
+        for ingredient in dinners[meal]:
+            grocery_list.append(ingredient)
+    return grocery_list
+
 #meal_to_vec("testing")
 #print(create_menu())

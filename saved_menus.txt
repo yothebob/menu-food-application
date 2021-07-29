@@ -2,3 +2,4 @@
 ['butternut squash', 'terriki tofu', 'Alfredo', 'butternut squash', 'beans and rice', 'terriki tofu']|2021-07-24
 \n
 ['beans and rice', 'testing', 'butternut squash', 'pizza', 'spagetti', 'chili']|2021-07-24
+['terriki tofu', 'spagetti', 'lasuna', 'mac and cheese', 'mac and cheese', 'butternut squash']|2021-07-28
