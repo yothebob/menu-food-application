@@ -12,22 +12,36 @@ import re
 
 
 
-# 9-26 importing init app data from .txt files
 def import_dinner_dict():
-    file = open("dinners_dict.txt", "r")
+    '''
+    Input : NA
+    Output : res (Dictionary)
+
+    Imports a dictionary of meals from data/dinners_dict.txt
+    '''
+    file = open("data/dinners_dict.txt", "r")
     contents = file.read()
     res = ast.literal_eval(contents)
     file.close()
     return res
 
+
+
 def import_ingredient_profiles():
-    f = open('ingredients.txt','r')
+    '''
+    input : NA
+    Output : res (dictionary)
+
+    Imports a dictionary of ingredient flavor vectors from data/ingredients.txt
+    '''
+    f = open('data/ingredients.txt','r')
     contents = f.read()
     res = ast.literal_eval(contents)
     f.close()
     return res
 
 
+#initializing
 dinners = import_dinner_dict()
 days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 ingredient_profiles = import_ingredient_profiles()
@@ -35,52 +49,45 @@ ingredient_profiles = import_ingredient_profiles()
 
 
 def create_menu():
-    #random gen mon-sunday meal plan
-    menu = []
-    for num in range(6):
-        menu.append(random.choice(list(dinners.keys())))
-    return menu
+    '''
+    Input : NA
+    Output : menu (list)
+
+    Creates a list of randomly picked meals, one for each day in the days
+    '''
+    return [random.choice(list(dinners.keys())) for day in days]
+
+
 
 def add_meal():
-    #add meal to dinner.txt file
-    new_meal = input("what would you like to add?")
-    ingredients = input("what ingredients do you use?")
+    '''
+    Input : NA
+    Output : NA
+
+    a function to manually add a meal/ingredients to "data/dinners_dict.txt"
+    '''
+    new_meal = input("what would you like to add?\n : ")
+    ingredients = input("what ingredients do you use? (Please list as such ...,...,...)\n : ")
+
     ingredient_array = ingredients.split(",")
     print(ingredient_array)
     dinners[new_meal] = ingredient_array
-    f = open("dinners_dict.txt", "w")
+
+    f = open("data/dinners_dict.txt", "w")
     f.write(str(dinners))
     f.close()
 
 
-def create_docx():
-    #create word doc (.docx) menu, generate new menu or use a saved menu you have
-    new_or_saved = input('would you like to use a saved menu? (y/n) \n: ')
-    if "y" in new_or_saved.lower():
-        menus = read_saved_menus()
-        menu_index = []
-        i = 0
-        for key,val in menus.items():
-            print(i,key,val)
-            menu_index.append(key)
-            i += 1
-        pick_meal = input('Which meal would you like to use? pick corrisponding number (0-x) \n: ')
-        menu = menus[menu_index[int(pick_meal)]]
-    else:
-        menu = create_menu()
-    doc = Document()
-    p = doc.add_paragraph()
-    for day in range(6):
-        p.add_run( days[day] + ": " + menu[day] + "\n")
-    doc.save(str(date.today()) + "menu.docx")
-    f = open("menus.txt","a")
-    f.write(str(date.today()) + str(menu))
-    f.close()
-
 
 def generate_menu():
-    #create a menu or generate a menu, if you like it, saves it for later
+    '''
+    Input : NA
+    Output : NA
+
+    a function to create your own weekly menu or randomly generate one.
+    '''
     user_input = input("Do you want to create your own menu? (y/n)\n: ")
+
     if "y" in user_input.lower():
         menu = []
         for day in days:
@@ -92,19 +99,23 @@ def generate_menu():
             menu.append(user_input)
     else:
         menu = create_menu()
+
     [print(days[x]+ ': ' + menu[x]) for x in range(len(menu))]
     save = input('does this menu look good to you? (y/n) to save.')
+
     if save.lower() == "y":
-        f = open('saved_menus.txt','a')
+        f = open('data/saved_menus.txt','a')
         f.write(str(menu) +'|' + str(date.today()) + "\n")
         f.close()
 
 
+
 def read_saved_menus():
     #read from saved_menus.txt, returns dict in format {date-index: menu}
-    f = open('saved_menus.txt','r')
+    f = open('data/saved_menus.txt','r')
     saved_menus = {}
     index = 0
+
     for line in f:
         menu=[]
         seperate = line.split("|")
@@ -121,9 +132,81 @@ def read_saved_menus():
             saved_menus[date] = menu
     return saved_menus
 
+
+def pick_saved_menu():
+    
+    menus = read_saved_menus()
+    menu_index = []
+    i = 0
+
+    for key,val in menus.items():
+        print(i,key,val)
+        menu_index.append(key)
+        i += 1
+
+    pick_meal = input('Which meal would you like to use? pick corrisponding number (0-x) \n: ')
+    menu = menus[menu_index[int(pick_meal)]]
+    return menu
+
+
+
+def create_docx():
+    #create word doc (.docx) menu, generate new menu or use a saved menu you have
+    new_or_saved = input('would you like to use a saved menu? (y/n) \n: ')
+
+    if "y" in new_or_saved.lower():
+        menu = pick_saved_menu()
+    else:
+        menu = create_menu()
+
+    doc = Document()
+    p = doc.add_paragraph()
+
+    for day in range(6):
+        p.add_run( days[day] + ": " + menu[day] + "\n")
+
+    doc.save(str(date.today()) + "menu.docx")
+    f = open("data/menus.txt","a")
+    f.write(str(date.today()) + str(menu))
+    f.close()
+
+
+
+def create_grocery_list(menu):
+    grocery_list = []
+    for meal in menu:
+        for ingredient in dinners[meal]:
+            grocery_list.append(ingredient)
+    print(grocery_list)
+    return grocery_list
+
+
+
+def terminal_interface():
+    print('''
+    Welcome to the Food Menu Program!!!
+        type "menu" to create a menu
+        type "docx" to create a word doc for a menu
+        type "groceries" to create grocery list
+        type "exit" to exit
+
+    ''')
+    user_input = input(": ")
+
+    if user_input.lower() == "menu":
+        generate_menu()
+    elif user_input.lower() == "docx":
+        create_docx()
+    elif user_input.lower() == "groceries":
+        create_grocery_list(pick_saved_menu())
+
+
+''' irrelivent stuff below '''
 #flavor profile for meal ingredients
 flavor_profile = ['sweet','sour','salt','bitter','acidic','basic','savory','hotness','spiciness','oily','minty'
 ,'astringent','starchiness','horseradish','creamy','earthy']
+
+
 
 def meal_to_vec(meal):
     #converting ingredients to a total meal flavor profile
@@ -140,7 +223,7 @@ def meal_to_vec(meal):
                 profile = input(f"how {flavor_profile[flavor]} is this? (0-1)")
                 new_ingredient_profile.append(float(profile))
             ingredient_profiles[ingredient] = new_ingredient_profile
-            f = open('ingredient.txt','w')
+            f = open('data/ingredient.txt','w')
             f.write(ingredient_profiles)
             f.close()
     for item in range(len(profiles)):
@@ -149,13 +232,6 @@ def meal_to_vec(meal):
     for item in res_profile:
         item = item/len(profiles)
     print(res_profile)
-
-def create_grocery_list(menu):
-    grocery_list = []
-    for meal in menu:
-        for ingredient in dinners[meal]:
-            grocery_list.append(ingredient)
-    return grocery_list
 
 #meal_to_vec("testing")
 #print(create_menu())
