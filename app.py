@@ -48,7 +48,7 @@ ingredient_profiles = import_ingredient_profiles()
 
 
 
-def create_menu():
+def return_menu():
     '''
     Input : NA
     Output : menu (list)
@@ -98,7 +98,7 @@ def generate_menu():
                 user_input = input(f"type the recipe you want for {day}\n:")
             menu.append(user_input)
     else:
-        menu = create_menu()
+        menu = return_menu()
 
     [print(days[x]+ ': ' + menu[x]) for x in range(len(menu))]
     save = input('does this menu look good to you? (y/n) to save.')
@@ -111,7 +111,12 @@ def generate_menu():
 
 
 def read_saved_menus():
-    #read from saved_menus.txt, returns dict in format {date-index: menu}
+    '''
+    Input : NA
+    Output : saved_menus (dictionary)
+
+    function to read saved menus from saved_menus.txt return format {date-index: menu}
+    '''
     f = open('data/saved_menus.txt','r')
     saved_menus = {}
     index = 0
@@ -133,8 +138,14 @@ def read_saved_menus():
     return saved_menus
 
 
+
 def pick_saved_menu():
-    
+    '''
+    Input : NA
+    Output : menu (list)
+
+    Read saved menus and pick a key, then returns a list of meals
+    '''
     menus = read_saved_menus()
     menu_index = []
     i = 0
@@ -151,13 +162,18 @@ def pick_saved_menu():
 
 
 def create_docx():
-    #create word doc (.docx) menu, generate new menu or use a saved menu you have
+    '''
+    Input : NA
+    Output : NA
+
+    creates a word document (.docx) from a saved menu or generated one.
+    '''
     new_or_saved = input('would you like to use a saved menu? (y/n) \n: ')
 
     if "y" in new_or_saved.lower():
         menu = pick_saved_menu()
     else:
-        menu = create_menu()
+        menu = return_menu()
 
     doc = Document()
     p = doc.add_paragraph()
@@ -173,10 +189,15 @@ def create_docx():
 
 
 def create_grocery_list(menu):
+    '''
+    Input : NA
+    Output : grocery_list (list)
+
+    Returns a list of all the ingredients from a selected menu.
+    '''
     grocery_list = []
     for meal in menu:
-        for ingredient in dinners[meal]:
-            grocery_list.append(ingredient)
+        grocery_list += [ingredient for ingredient in dinners[meal]]
     print(grocery_list)
     return grocery_list
 
@@ -234,4 +255,4 @@ def meal_to_vec(meal):
     print(res_profile)
 
 #meal_to_vec("testing")
-#print(create_menu())
+#print(return_menu())
