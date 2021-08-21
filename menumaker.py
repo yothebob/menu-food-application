@@ -199,7 +199,7 @@ class MenuMaker:
         '''
         grocery_list = []
         for meal in menu:
-            grocery_list += [ingredient for ingredient in self.dinners[meal]]
+            grocery_list += [ingredient for ingredient in self.bdinners[meal]]
         print(grocery_list)
         return grocery_list
 

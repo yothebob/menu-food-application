@@ -6,6 +6,13 @@
     <title>Menu Creator </title>
   </head>
   <body>
+    <ul class="nav-bar">
+      <a href="{{url_for('index')}}"><h1>Home</h1></a>
+      <a href="{{url_for('create_menu')}}"><h1>Create Menu</h1></a>
+      <a href="{{url_for('create_docx')}}"><h1>Export Menu</h1></a>
+      <a href="{{url_for('create_grocery_list')}}"><h1>Create Grocery List</h1></a>
+      <a href="{{url_for('index')}}"><h1>Add Meal</h1></a>
+  </ul>
     {%block content%}{% endblock %}
 
   </body>
