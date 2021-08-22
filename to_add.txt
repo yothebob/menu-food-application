@@ -6,3 +6,4 @@ Things to add
 - add ingredient database
 -add meal database
 - use web scraping tool
+\nadd idea so if someone wants to modify a recipe, it will give sugestions to update the recipe according to how they want it to taste.

@@ -4,6 +4,7 @@ from menumaker import MenuMaker
 
 
 app = Flask(__name__)
+app.config['SECRET KEY'] = '1233456789'
 DATABASE = 'meals.db'
 
 
@@ -26,9 +27,10 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/menu/")
+@app.route("/menu/",methods=['GET','POST'])
 def create_menu():
-    return render_template('index.html')
+    meals = [meal for meal in query_db('SELECT name from dinners')]
+    return render_template('menus.html',meals=meals)
 
 
 @app.route("/export/")

@@ -12,9 +12,14 @@ dinner_dict = ast.literal_eval(content)
 dinners.close()
 
 
-#cur.execute("CREATE TABLE dinners (id INTEGER PRIMARY KEY, name TEXT UNIQUE, ingredients TEXT)")
- i = 0
+cur.execute("CREATE TABLE dinners (id INTEGER PRIMARY KEY, name TEXT, ingredients TEXT)")
+i = 1
 for keys, values in dinner_dict.items():
-    print("key",keys,"Values",values)
+    print(i,keys,"\n","Values",values)
     i += 1
-    cur.execute("INSERT INTO dinners VALUES (?, ?, ?)",(i, keys, values))
+    cur.execute("INSERT INTO dinners VALUES (?, ?, ?)",(i, str(keys), str(values)))
+
+
+con.commit()
+
+con.close()
