@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, g, url_for
 import sqlite3
 from menumaker import MenuMaker
+import re
 
 
 app = Flask(__name__)
@@ -29,7 +30,7 @@ def index():
 
 @app.route("/menu/",methods=['GET','POST'])
 def create_menu():
-    meals = [meal for meal in query_db('SELECT name from dinners')]
+    meals = [re.sub(r"[)',(]","",str(meal)) for meal in query_db('SELECT name from dinners')]
     return render_template('menus.html',meals=meals)
 
 

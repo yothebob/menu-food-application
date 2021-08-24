@@ -18,7 +18,7 @@ for keys, values in dinner_dict.items():
     print(i,keys,"\n","Values",values)
     i += 1
     cur.execute("INSERT INTO dinners VALUES (?, ?, ?)",(i, str(keys), str(values)))
-
+    
 
 con.commit()
 
