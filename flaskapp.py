@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, g, url_for
 import sqlite3
 from menumaker import MenuMaker
 import re
+from wtforms import Form, SelectField, SubmitField, validators, RadioField
 
 
 app = Flask(__name__)
@@ -10,6 +11,12 @@ DATABASE = 'meals.db'
 
 
 def get_db():
+    '''
+    Input : NA
+    Output : db (database)
+
+    function for getting database
+    '''
     db = getattr(g,'_database',None)
     if db is None:
         db = g.database = sqlite3.connect(DATABASE)
@@ -23,6 +30,13 @@ def query_db(query,args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
+def get_meals():
+    return [re.sub(r"[)',(]","",str(meal)) for meal in query_db('SELECT name from dinners')]
+
+def tuple_meals():
+    return [(meal[0].upper(),meal[0]) for meal in query_db('SELECT name FROM dinners')]
+
+
 @app.route("/")
 def index():
     return render_template('index.html')
@@ -30,8 +44,21 @@ def index():
 
 @app.route("/menu/",methods=['GET','POST'])
 def create_menu():
-    meals = [re.sub(r"[)',(]","",str(meal)) for meal in query_db('SELECT name from dinners')]
-    return render_template('menus.html',meals=meals)
+    class MenuForm(Form):
+        monday = SelectField("Monday", choices=tuple_meals())
+        tuesday = SelectField("Tuesday", choices=tuple_meals())
+        wednesday = SelectField("Wednesday", choices=tuple_meals())
+        thursday = SelectField("Thursday", choices=tuple_meals())
+        friday = SelectField("Friday", choices=tuple_meals())
+        saturday = SelectField("Saturday", choices=tuple_meals())
+        sunday = SelectField("Sunday",choices=tuple_meals())
+        submit = SubmitField("Submit")
+    form = MenuForm(request.form)
+    dow = [form.monday,form.tuesday,form.wednesday,form.thursday,form.friday,form.saturday,form.sunday]
+    if request.method == 'POST':
+        return render_template('gen_menu.html')
+    else:
+        return render_template('menus.html',dow=dow,form=form)
 
 
 @app.route("/export/")

@@ -2,9 +2,13 @@
 {% block content %}
 
   <h1>Showing menus</h1>
-  
-  {% for meal in meals %}
-    <p>{{meal}}</p>
-  {% endfor %}
+  <form class="" method="post">
+    {% for day in dow %}
+      {{ day.label }}
+      {{ day()}}
+    {% endfor %}
+    <h1>{{form.submit()}}</h1>
+  </form>
+  <h3>testing</h3>
 
 {% endblock %}
