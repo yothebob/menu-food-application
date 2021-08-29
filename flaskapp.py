@@ -34,7 +34,7 @@ def get_meals():
     return [re.sub(r"[)',(]","",str(meal)) for meal in query_db('SELECT name from dinners')]
 
 def tuple_meals():
-    return [(meal[0].upper(),meal[0]) for meal in query_db('SELECT name FROM dinners')]
+    return [(meal[0],meal[0]) for meal in query_db('SELECT name FROM dinners')]
 
 
 @app.route("/")
@@ -56,6 +56,8 @@ def create_menu():
     form = MenuForm(request.form)
     dow = [form.monday,form.tuesday,form.wednesday,form.thursday,form.friday,form.saturday,form.sunday]
     if request.method == 'POST':
+        menu = [day.data for day in dow]
+        print(menu)
         return render_template('gen_menu.html')
     else:
         return render_template('menus.html',dow=dow,form=form)
