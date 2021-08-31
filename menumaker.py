@@ -43,7 +43,7 @@ class MenuMaker:
 
 
     def __init__(self):
-        self.dinners = import_dinner_dict()
+        self.dinners = self.import_dinner_dict()
         self.days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
         #not currently used
         #self.ingredient_profiles = import_ingredient_profiles()
@@ -61,7 +61,7 @@ class MenuMaker:
 
 
 
-    def add_meal():
+    def add_meal(self):
         '''
         Input : NA
         Output : NA
@@ -81,7 +81,7 @@ class MenuMaker:
 
 
 
-    def generate_menu():
+    def generate_menu(self):
         '''
         Input : NA
         Output : NA
@@ -112,7 +112,7 @@ class MenuMaker:
 
 
 
-    def read_saved_menus():
+    def read_saved_menus(self):
         '''
         Input : NA
         Output : saved_menus (dictionary)
@@ -141,7 +141,7 @@ class MenuMaker:
 
 
 
-    def pick_saved_menu():
+    def pick_saved_menu(self):
         '''
         Input : NA
         Output : menu (list)
@@ -163,12 +163,13 @@ class MenuMaker:
 
 
 
-    def create_docx():
+    def create_docx(self,menu):
         '''
         Input : NA
         Output : NA
 
         creates a word document (.docx) from a saved menu or generated one.
+        '''
         '''
         new_or_saved = input('would you like to use a saved menu? (y/n) \n: ')
 
@@ -176,12 +177,13 @@ class MenuMaker:
             menu = pick_saved_menu()
         else:
             menu = return_menu()
-
+        '''
+        menu = [item for item in menu.values()]
         doc = Document()
         p = doc.add_paragraph()
-
+        print(menu)
         for day in range(6):
-            p.add_run( days[day] + ": " + menu[day] + "\n")
+            p.add_run( self.days[day] + ": " + menu[0][day] + "\n")
 
         doc.save(str(date.today()) + "menu.docx")
         f = open("data/menus.txt","a")
@@ -190,7 +192,7 @@ class MenuMaker:
 
 
 
-    def create_grocery_list(menu):
+    def create_grocery_list(self,menu):
         '''
         Input : NA
         Output : grocery_list (list)
@@ -205,7 +207,7 @@ class MenuMaker:
 
 
 
-    def terminal_interface():
+    def terminal_interface(self):
         print('''
         Welcome to the Food Menu Program!!!
             type "menu" to create a menu
@@ -231,7 +233,7 @@ flavor_profile = ['sweet','sour','salt','bitter','acidic','basic','savory','hotn
 
 
 
-def meal_to_vec(meal):
+def meal_to_vec(self,meal):
     #converting ingredients to a total meal flavor profile
     res_profile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     profiles = []

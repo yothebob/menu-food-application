@@ -45,6 +45,7 @@ def index():
 @app.route("/menu/",methods=['GET','POST'])
 def create_menu():
     saved_menus = {}
+    menumaker = MenuMaker()
     class MenuForm(Form):
         menu_name = StringField("Menu Name: ")
         monday = SelectField("Monday", choices=tuple_meals())
@@ -62,7 +63,9 @@ def create_menu():
         f = open('saved_menus.txt',"a")
         saved_menus[form.menu_name.data] = menu
         f.write(str(saved_menus))
+        menumaker.create_docx(saved_menus)
         f.close()
+
         return render_template('gen_menu.html')
     else:
         return render_template('menus.html',dow=dow,form=form)
