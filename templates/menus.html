@@ -3,6 +3,8 @@
 
   <h1>Showing menus</h1>
   <form class="" method="post">
+    <h3>Menu Name</h3>
+    <h1>{{form.menu_name}}</h1>
     {% for day in dow %}
       {{ day.label }}
       {{ day()}}

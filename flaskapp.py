@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, g, url_for
 import sqlite3
 from menumaker import MenuMaker
 import re
-from wtforms import Form, SelectField, SubmitField, validators, RadioField
+from wtforms import Form, SelectField, SubmitField, validators, RadioField,StringField
 
 
 app = Flask(__name__)
@@ -44,7 +44,9 @@ def index():
 
 @app.route("/menu/",methods=['GET','POST'])
 def create_menu():
+    saved_menus = {}
     class MenuForm(Form):
+        menu_name = StringField("Menu Name: ")
         monday = SelectField("Monday", choices=tuple_meals())
         tuesday = SelectField("Tuesday", choices=tuple_meals())
         wednesday = SelectField("Wednesday", choices=tuple_meals())
@@ -57,7 +59,10 @@ def create_menu():
     dow = [form.monday,form.tuesday,form.wednesday,form.thursday,form.friday,form.saturday,form.sunday]
     if request.method == 'POST':
         menu = [day.data for day in dow]
-        print(menu)
+        f = open('saved_menus.txt',"a")
+        saved_menus[form.menu_name.data] = menu
+        f.write(str(saved_menus))
+        f.close()
         return render_template('gen_menu.html')
     else:
         return render_template('menus.html',dow=dow,form=form)
