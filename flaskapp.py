@@ -62,7 +62,7 @@ def create_menu():
         menu = [day.data for day in dow]
         f = open('saved_menus.txt',"a")
         saved_menus[form.menu_name.data] = menu
-        f.write(str(saved_menus))
+        f.write(str(saved_menus)+"\n")
         menumaker.create_docx(saved_menus)
         f.close()
 
@@ -73,7 +73,11 @@ def create_menu():
 
 @app.route("/export/")
 def create_docx():
-    return render_template("index.html")
+    f = open("saved_menus.txt","r")
+    saved_menus = [line[0:-1] for line in f.readlines()]
+    f.close()
+    print(saved_menus)
+    return render_template("export.html",saved_menus=saved_menus)
 
 
 @app.route("/grocery/")
