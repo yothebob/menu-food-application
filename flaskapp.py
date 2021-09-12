@@ -76,13 +76,13 @@ def create_docx():
     f = open("saved_menus.txt","r")
     saved_menus = [line[0:-1] for line in f.readlines()]
     f.close()
-    
+
     saved_menus_dict = {}
     for item in saved_menus:
         menu_dict = ast.literal_eval(item)
         saved_menus_dict[next(iter(menu_dict))] = menu_dict[next(iter(menu_dict))]
-        print(saved_menus_dict)
-        
+        #print(saved_menus_dict)
+
     return render_template("export.html",saved_menus_dict=saved_menus_dict)
 
 
