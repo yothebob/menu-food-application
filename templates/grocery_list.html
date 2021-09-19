@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="">
+  <h1>Create a grocery List!</h1>
+    <p>To create a grocery list start by entering the saved menu you want to use. Then press submit and see the grocery list below.</p>
+
+    <form class="" method="post">
+      <h1>{{ form.saved_menu.label }}</h1>
+      <h1>{{ form.saved_menu() }}</h1>
+      <h1>{{ form.submit() }}</h1>
+    </form>
+</div>
+<div class="">
+  <h1>Your Grocery List:</h1>
+  <p>{{grocery_list}}</p>
+</div>
+{% endblock %}

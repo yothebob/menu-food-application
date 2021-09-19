@@ -33,6 +33,7 @@ def query_db(query,args=(), one=False):
 def get_meals():
     return [re.sub(r"[)',(]","",str(meal)) for meal in query_db('SELECT name from dinners')]
 
+
 def tuple_meals():
     return [(meal[0],meal[0]) for meal in query_db('SELECT name FROM dinners')]
 
@@ -46,6 +47,7 @@ def index():
 def create_menu():
     saved_menus = {}
     menumaker = MenuMaker()
+
     class MenuForm(Form):
         menu_name = StringField("Menu Name: ")
         monday = SelectField("Monday", choices=tuple_meals())
@@ -56,6 +58,7 @@ def create_menu():
         saturday = SelectField("Saturday", choices=tuple_meals())
         sunday = SelectField("Sunday",choices=tuple_meals())
         submit = SubmitField("Submit")
+
     form = MenuForm(request.form)
     dow = [form.monday,form.tuesday,form.wednesday,form.thursday,form.friday,form.saturday,form.sunday]
     if request.method == 'POST':
@@ -81,14 +84,43 @@ def create_docx():
     for item in saved_menus:
         menu_dict = ast.literal_eval(item)
         saved_menus_dict[next(iter(menu_dict))] = menu_dict[next(iter(menu_dict))]
-        #print(saved_menus_dict)
+        print(saved_menus_dict)
 
     return render_template("export.html",saved_menus_dict=saved_menus_dict)
 
 
-@app.route("/grocery/")
+@app.route("/grocery/", methods=['GET','POST'])
 def create_grocery_list():
-    return render_template("index.html")
+    menumaker = MenuMaker()
+
+    f = open("saved_menus.txt","r")
+    saved_menus = [line[:-1] for line in f.readlines()]
+    f.close()
+    print(saved_menus)
+
+    saved_menus_dict = {}
+    for weekly_menu in saved_menus:
+        menu_dict = ast.literal_eval(weekly_menu)
+        saved_menus_dict[next(iter(menu_dict))] = menu_dict[next(iter(menu_dict))]
+    print(saved_menus_dict)
+
+    tupled_saved_meals = [(key,key) for key in saved_menus_dict.keys()]
+
+    print(tupled_saved_meals)
+
+    class SavedMenuForm(Form):
+        saved_menu = SelectField("Saved Menu: ", choices=tupled_saved_meals)
+        submit = SubmitField("Submit")
+
+    form = SavedMenuForm(request.form)
+    if request.method == 'POST':
+        print(saved_menus_dict[form.saved_menu.data])
+        print(form.saved_menu.data)
+        grocery_list = menumaker.create_grocery_list(saved_menus_dict[form.saved_menu.data])
+    else:
+        grocery_list = []
+
+    return render_template("grocery_list.html",grocery_list=grocery_list,form=form)
 
 
 @app.teardown_appcontext
