@@ -3,15 +3,20 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, internal-scale=1, shrink-to-fit=no">
+    <link type="text/css" rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
     <title>Menu Creator </title>
   </head>
   <body>
     <ul class="nav-bar">
-      <a href="{{url_for('index')}}"><h1>Home</h1></a>
-      <a href="{{url_for('create_menu')}}"><h1>Create Menu</h1></a>
-      <a href="{{url_for('create_docx')}}"><h1>Export Menu</h1></a>
-      <a href="{{url_for('create_grocery_list')}}"><h1>Create Grocery List</h1></a>
-      <a href="{{url_for('index')}}"><h1>Add Meal</h1></a>
+      <li><a href="{{url_for('index')}}"><h1>Home</h1></a></li>
+      |
+      <li><a href="{{url_for('create_menu')}}"><h1>Create Menu</h1></a></li>
+      |
+      <li><a href="{{url_for('create_docx')}}"><h1>Export Menu</h1></a></li>
+      |
+      <li><a href="{{url_for('create_grocery_list')}}"><h1>Create Grocery List</h1></a></li>
+      |
+      <li><a href="{{url_for('index')}}"><h1>Add Meal</h1></a></li>
   </ul>
     {%block content%}{% endblock %}
 

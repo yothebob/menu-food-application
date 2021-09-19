@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="saved-menus">
   <h1>Your Saved Menus</h1>
   {% for key,val in saved_menus_dict.items() %}
     <h3><a href="#">{{key}}</a></h3>
   {% endfor %}
+</div>
 {% endblock %}

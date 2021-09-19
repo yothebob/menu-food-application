@@ -10,6 +10,8 @@ app.config['SECRET KEY'] = '1233456789'
 DATABASE = 'meals.db'
 
 
+app.static_folder = "static"
+
 def get_db():
     '''
     Input : NA
@@ -36,9 +38,12 @@ def get_meals():
 
 def get_saved_menus():
     #[f"{{re.sub(r"[)',()]","",str(menu))}"for menu in query_db("SELECT name,meals from saved_menus")]
-    keys = [str(name) for name in query_db("SELECT name from saved_menus")]
-    values = [str(values) for values in query_db("SELECT meals from saved_menus")]
-    return keys,values
+    keys = [name for name in query_db("SELECT name from saved_menus")]
+    values = [values for values in query_db("SELECT meals from saved_menus")]
+    dict = {}
+    for num in range(len(keys)):
+        dict[keys[num][0]] = values[num][0]
+    return dict
 
 
 def tuple_meals():
@@ -98,16 +103,17 @@ def create_docx():
 
 @app.route("/grocery/", methods=['GET','POST'])
 def create_grocery_list():
+
     menumaker = MenuMaker()
 
-    db_save_menus = get_saved_menus()
-    print(db_save_menus)
-
-
+    db_saved_dict = get_saved_menus()
+    #print(db_saved_dict)
+    #this prints key, value as string and list (each val was put in a tuple inside a big tuple)
+    #\/\/ reading/writing to txt file will be obsolete soon
     f = open("saved_menus.txt","r")
     saved_menus = [line[:-1] for line in f.readlines()]
     f.close()
-    print(saved_menus)
+
 
     saved_menus_dict = {}
     for weekly_menu in saved_menus:
@@ -115,7 +121,7 @@ def create_grocery_list():
         saved_menus_dict[next(iter(menu_dict))] = menu_dict[next(iter(menu_dict))]
     #print(saved_menus_dict)
 
-    tupled_saved_meals = [(key,key) for key in saved_menus_dict.keys()]
+    tupled_saved_meals = [(key,key) for key in db_saved_dict.keys()]
 
     #print(tupled_saved_meals)
 
@@ -125,9 +131,14 @@ def create_grocery_list():
 
     form = SavedMenuForm(request.form)
     if request.method == 'POST':
-        #print(saved_menus_dict[form.saved_menu.data])
-        #print(form.saved_menu.data)
-        grocery_list = menumaker.create_grocery_list(saved_menus_dict[form.saved_menu.data])
+
+        #quick work around db_dict is reurning str instead of list
+        db_saved_list = db_saved_dict[form.saved_menu.data][1:-1]
+        split_db_saved_menu = db_saved_list.split(",")
+        cleaned_split_list = [item.replace("'", "") for item in split_db_saved_menu]
+        print(cleaned_split_list)
+
+        grocery_list = menumaker.create_grocery_list(cleaned_split_list)
     else:
         grocery_list = []
 

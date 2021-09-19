@@ -1,0 +1,20 @@
+html{
+  font-size: 15px;
+}
+
+.nav-bar {
+  text-align: center;
+  list-style-type: none;
+}
+
+li {
+  display: inline-block;
+}
+
+h1{
+  font-size: 1.5rem;
+}
+
+.saved-menus{
+  text-align: center;
+}
