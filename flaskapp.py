@@ -34,6 +34,13 @@ def get_meals():
     return [re.sub(r"[)',(]","",str(meal)) for meal in query_db('SELECT name from dinners')]
 
 
+def get_saved_menus():
+    #[f"{{re.sub(r"[)',()]","",str(menu))}"for menu in query_db("SELECT name,meals from saved_menus")]
+    keys = [str(name) for name in query_db("SELECT name from saved_menus")]
+    values = [str(values) for values in query_db("SELECT meals from saved_menus")]
+    return keys,values
+
+
 def tuple_meals():
     return [(meal[0],meal[0]) for meal in query_db('SELECT name FROM dinners')]
 
@@ -93,6 +100,10 @@ def create_docx():
 def create_grocery_list():
     menumaker = MenuMaker()
 
+    db_save_menus = get_saved_menus()
+    print(db_save_menus)
+
+
     f = open("saved_menus.txt","r")
     saved_menus = [line[:-1] for line in f.readlines()]
     f.close()
@@ -102,11 +113,11 @@ def create_grocery_list():
     for weekly_menu in saved_menus:
         menu_dict = ast.literal_eval(weekly_menu)
         saved_menus_dict[next(iter(menu_dict))] = menu_dict[next(iter(menu_dict))]
-    print(saved_menus_dict)
+    #print(saved_menus_dict)
 
     tupled_saved_meals = [(key,key) for key in saved_menus_dict.keys()]
 
-    print(tupled_saved_meals)
+    #print(tupled_saved_meals)
 
     class SavedMenuForm(Form):
         saved_menu = SelectField("Saved Menu: ", choices=tupled_saved_meals)
@@ -114,8 +125,8 @@ def create_grocery_list():
 
     form = SavedMenuForm(request.form)
     if request.method == 'POST':
-        print(saved_menus_dict[form.saved_menu.data])
-        print(form.saved_menu.data)
+        #print(saved_menus_dict[form.saved_menu.data])
+        #print(form.saved_menu.data)
         grocery_list = menumaker.create_grocery_list(saved_menus_dict[form.saved_menu.data])
     else:
         grocery_list = []
