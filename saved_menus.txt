@@ -5,3 +5,4 @@
 {'will i show up': ['spagetti', 'Alpine macaroni', 'arroz chaufa', 'spaghetti aglio e olio', 'bolognese sauce', 'bolinhos de coco', 'breakfast wrap']}
 {'nre_testing_menu': ['Alpine macaroni', 'arroz chaufa', 'Bolo do Caco (Caco Bread)', 'bolognese sauce', 'beef goulash', 'spaghetti aglio e olio', 'tacobell']}
 {'new awesome saved menu': ['tacobell', 'tacobell', 'tacobell', 'tacobell', 'tacobell', 'tacobell', 'tacobell']}
+{'new menu': ['butternut squash', 'butternut squash', 'butternut squash', 'butternut squash', 'butternut squash', 'butternut squash', 'butternut squash']}
