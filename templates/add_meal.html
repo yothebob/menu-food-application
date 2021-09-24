@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="">
+    <h1>Add Meal</h1>
+      <p>Fill out the following form to add a new meal to the database</p>
+      <form class="" method="post">
+        {{form.select_dinners.label}}
+        {{form.select_dinners()}}
+        {{form.ingredients.label}}
+        {{form.ingredients()}}
+        {{form.submit()}}
+      </form>
+  </div>
+{% endblock %}

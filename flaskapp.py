@@ -43,8 +43,8 @@ def get_saved_menus():
     dict = {}
     for num in range(len(keys)):
         dict[keys[num][0]] = values[num][0]
-        print(values[num][0])
-    print(dict)
+        #print(values[num][0])
+    #print(dict)
     return dict
 
 
@@ -84,7 +84,7 @@ def create_menu():
         menumaker.create_docx(saved_menus)
         f.close()
 
-        return render_template('gen_menu.html')
+        return render_template('index.html')
     else:
         return render_template('menus.html',dow=dow,form=form)
 
@@ -131,6 +131,27 @@ def create_grocery_list():
 
     return render_template("grocery_list.html",grocery_list=grocery_list,form=form)
 
+
+@app.route("/addmeal/",methods=["GET","POST"])
+def add_meal():
+    #"INSERT INTO dinners VALUES (?, ?, ?)",(i, str(keys), str(values)
+    #query_db("SELECT name from saved_menus")]
+    #dinners = [(item,item) for item in query_db("SELECT name from dinners")]]
+    #print(dinners)
+
+    class DinnerForm(Form):
+        select_dinners = StringField("What is the name of the Meal?")
+        ingredients = StringField("what are the ingredients? PLEASE SPLIT BY COMMAS")
+        submit = SubmitField("Submit")
+
+    form = DinnerForm(request.form)
+    if request.method == "POST":
+        print("running")
+        ingredient_list = form.ingredients.data.split(",")
+        query_db("INSERT INTO dinners VALUES (?, ?, ?)",(i, str(form.select_dinners.data), str(ingredient_list)))
+        return render_template("index.html")
+    else:
+        return render_template("add_meal.html",form=form)
 
 @app.teardown_appcontext
 def close_connection(exception):
