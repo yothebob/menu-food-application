@@ -111,17 +111,6 @@ def create_grocery_list():
 
     db_saved_dict = get_saved_menus()
 
-    #this prints key, value as string and list (each val was put in a tuple inside a big tuple)
-    #\/\/ reading/writing to txt file will be obsolete soon
-    f = open("saved_menus.txt","r")
-    saved_menus = [line[:-1] for line in f.readlines()]
-    f.close()
-
-    saved_menus_dict = {}
-    for weekly_menu in saved_menus:
-        menu_dict = ast.literal_eval(weekly_menu)
-        saved_menus_dict[next(iter(menu_dict))] = menu_dict[next(iter(menu_dict))]
-
     tupled_saved_meals = [(key,key) for key in db_saved_dict.keys()]
 
     class SavedMenuForm(Form):
@@ -133,11 +122,8 @@ def create_grocery_list():
 
         #quick work around db_dict is reurning str instead of list
         db_saved_list = db_saved_dict[form.saved_menu.data]
-        print(db_saved_list)
         replaced_list = db_saved_list[1:-1].replace("'","")
-        print(replaced_list)
         cleaned_list = replaced_list.split(", ")
-        print(cleaned_list)
 
         grocery_list = menumaker.create_grocery_list(cleaned_list)
     else:
