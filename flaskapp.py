@@ -133,12 +133,13 @@ def create_grocery_list():
 
         #quick work around db_dict is reurning str instead of list
         db_saved_list = db_saved_dict[form.saved_menu.data]
-        db_list = list(db_saved_list)
-        #split_db_saved_menu = db_saved_list.split(",")
-        #print(split_db_saved_menu)
-        #cleaned_split_list = [item.replace("'", "")for item in split_db_saved_menu]
+        print(db_saved_list)
+        replaced_list = db_saved_list[1:-1].replace("'","")
+        print(replaced_list)
+        cleaned_list = replaced_list.split(", ")
+        print(cleaned_list)
 
-        grocery_list = menumaker.create_grocery_list(db_list)
+        grocery_list = menumaker.create_grocery_list(cleaned_list)
     else:
         grocery_list = []
 
